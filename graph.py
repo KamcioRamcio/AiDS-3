@@ -1,36 +1,36 @@
 import random 
 import queue
+from collections import deque
 
-
-
+# DO SPRAWOZDANIA
+# Algorytm Khana nie działa w grafach z cyklami a Tarjana działa nawet ponoć jest specjalnie przstosowany do grafów z cyklami
+# Ważne jest jednak zauważyć, że BFS w grafach skierowanych może nie odwiedzić wszystkich wierzchołków, jeśli nie ma ścieżki od startowego wierzchołka do pozostałych wierzchołków w grafie. Jednak nadal będzie działał poprawnie, odwiedzając wszystkie wierzchołki, do których jest ścieżka z wierzchołka początkowego.
+# Dlatego dodałem funckję w main do wybrania wierzcołka od którego zaczynamy BFS i DFS
 
 # jakiś mądry człowiek powiedział, że naukowcy mówią nodes a nie verticles pozdro
 class Graph:
     def __init__(self, nodes):
         self.nodes = nodes
-        self.adj_list = {n: [] for n in range(nodes)}
+        self.adj_list = {n: [] for n in range(1, nodes+1)}
 
     def add_edge(self, u, v):
         self.adj_list[u].append(v)
 
     def generate(self, saturation):
-        for u in range(self.nodes):
-            for v in range(u + 1, self.nodes):
+        for u in range(1, self.nodes+1):
+            for v in range(u + 1, self.nodes+1):
                 if random.random() < saturation:
                     self.add_edge(u, v)
-        # ile maksymalnie moze być maksymalnie wierzchołków zeby nadal grapf by acuklocizny i skierowany
-        # nie ze jestem madry ludzie w internecie sa calkiem ogarnieci
         max_edges = self.nodes * (self.nodes - 1) / 2
-        # ile podal uzytowknik wsm 
-        actual_edges = sum(len(self.adj_list[v]) for v in range(self.nodes))
+        actual_edges = sum(len(self.adj_list[v]) for v in range(1, self.nodes+1))
         
         while actual_edges > max_edges:
-            u = random.randint(0, self.nodes - 1)
+            u = random.randint(1, self.nodes)
             if self.adj_list[u]:
                 self.adj_list[u].pop()
                 actual_edges -= 1
-                
-    
+                            
+        
 
     def user_provided(self, edges_list):
         for u, v in edges_list:
@@ -38,25 +38,42 @@ class Graph:
             
     def table(self):
         for node, edges in self.adj_list.items():
-            print(f"Node {node}: {edges}")   
+            print(f"{node}: {edges}")   
     
     def matrix(self):
-        #trzeba dodac opisy kolumn i wierszy 
+    
         matrix = [[0]*self.nodes for _ in range(self.nodes)]
         for node, edges in self.adj_list.items():
             for edge in edges:
-                matrix[node][edge] = 1
-        for row in matrix:
-            print(' '.join(str(cell) for cell in row))  
-    # def list wystarczy dac print("Adjacency list:", g.adj_list)
+                matrix[node-1][edge-1] = 1
+        print("    " + "  ".join(str(i) for i in range(1, self.nodes+1)))  
+        print("--+" + "---"*self.nodes) 
+        for i, row in enumerate(matrix, start=1):
+            print(f"{i} | {'  '.join(str(cell) for cell in row)}")
+    # lista to wystarczy dac print("Adjacency list:", g.adj_list) to bardziej taki słownik ale no niech będzie 
     
     # ty ja nie rozumiem troche tego 3 zadania podkunt 3, wyszkuwanie krawedzi grafu 
-    def edge_serach(self, start, end):
-        if start in self.adj.list:
+    def find(self, start, end):
+        if start in self.adj_list:
             if end in self.adj_list[start]:
                 return True
         return False
-    
+    # Znajdowanie najkrótszej sciezki w grafie oparte na BFS 
+    def find_path(self, start, end):
+        queue = deque([[start]])
+        while queue:
+            path = queue.popleft()
+            node = path[-1]
+            if node == end:
+                return path
+            for adjacent in self.adj_list.get(node, []):
+                new_path = list(path)
+                new_path.append(adjacent)
+                queue.append(new_path)
+        return None
+
+        
+
     # Przechodzenie wszerz grafu
     def BFS(self, start_node):
         visited = set()
@@ -83,11 +100,38 @@ class Graph:
             for neighbour in self.adj_list[start_node]:
                 if neighbour not in visited:
                     order += self.DFS(neighbour, visited)
+        
         return order
-    # Algorytm Khana
+    
+    # Sprawdzanie czy graf jest cykliczny, zrobione for fun wsm
+    def is_cyclic(self):
+        visited = set()
+        for node in self.adj_list:
+            if node not in visited:
+                if self._is_cyclic(node, visited, -1):
+                    return True
+        return False
+    
+    def _is_cyclic(self, node, visited, parent):
+        visited.add(node)
+        stack = set()  # Ensure that stack is a set
+
+        for neighbour in self.adj_list[node]:
+            if neighbour not in visited:
+                if self._is_cyclic(neighbour, visited, node):
+                    return True
+            elif parent != neighbour:
+                return True
+
+        stack.add(node)  # Now it's safe to add node to stack
+        return False
+        # Algorytm Khana
     # Wazne: degree sie liczy, bo powino byc tak ze zaczynasz od node który ma degree 0 i idziej rosnaco
-    def degree(self, node):
-        return sum(1 for edges in self.adj_list.values() if node in edges)
+    #def degree(self, node):
+    #    return sum(1 for edges in self.adj_list.values() if node in edges)
+    
+    
+        
     
     def Khan_Algorithm(self):
         # w naszym przypadku nie ma znaczenia czy to indegree czy outdegree bo jest to graf skierowany na 100%
@@ -111,9 +155,9 @@ class Graph:
                 if in_degree[neighbour] == 0:
                     q.put(neighbour)
         
-        # mozna jeszcze sprawcic czy nie ma cyklu w grafie nizej warunek
+        # mozna jeszcze sprawcic czy nie ma cyklu w grafie nizej warunek, przydaje sie jak jest user-provided, dodałem to do maina
         if len(order) != len(self.adj_list):
-            return print("Cykl w grafie")
+            return None
         
         else:
             return order
@@ -124,9 +168,9 @@ class Graph:
     # https://www.youtube.com/watch?v=_1TDxihjtoE spoko wytłumaczone
     #
     def Trajan_Algorithm(self):
-        # Po ludzku wytłumacze bazowo kazdy wierzchołek ma index -1 ,sygnalizuje, że dla danego wierzchołka nie ustalono jescze indexu
+        # Po ludzku wytłumacze bazowo kazdy wierzchołek ma index -1 
         index = {n: -1 for n in self.adj_list}
-        # Jest to wartość, która będzie reprezentować najniższy numer porządkowy w komponencie silnie spójnej dla danego wierzchołka.
+        # Jest to wartość, która będzie reprezentować najniższy numer porządkowy w komponencie strong connect dla danego wierzchołka.
         low_link = {n: -1 for n in self.adj_list}
         # Info czy dany wierzchołek jest na stosie czy nie
         on_stack = {n: False for n in self.adj_list}
@@ -182,24 +226,9 @@ class Graph:
                     if neighbour != node:  
                         f.write(f"\\path[->] ({node}) edge node {{}} ({neighbour});\n")
             f.write("\\end{tikzpicture}\n")
-            f.write("\\caption{Directed Graph}\n")
             f.write("\\end{figure}\n")
             f.write("\\end{document}\n")
             
-#if __name__ == "__main__":
-#    nodes = 10  # specify the number of nodes
-#    saturation = 0.5  # specify the saturation
-#    g = Graph(nodes)
-#    g.generate(saturation)
-#    g.table()
-#    g.matrix()
-#    print("Adjacency list:", g.adj_list)
-#    print(g.BFS(0))
-#    print(g.DFS(0))
-#    print(g.degree(0))
-#    print(g.Khan_Algorithm())
-#    print(g.Trajan_Algorithm())
-#    g.to_latex('graph.tex')
 
 
      
