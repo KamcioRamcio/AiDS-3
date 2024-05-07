@@ -118,7 +118,6 @@ def print_graph(g, type):
 def dfs_bfs(g, command):
     for start_node in range(1, g.nodes + 1):
         if command == "bfs":
-            
             visited = g.BFS(start_node)
         else:
             visited = g.DFS(start_node)
@@ -126,6 +125,9 @@ def dfs_bfs(g, command):
         if len(visited) == g.nodes:
             print(f"Starting from node {start_node}")
             print('inline:  ','  '.join(map(str, visited)))
+            break
+        else:
+            print('Graph is not connected, cant be traversed from any node')
             break
 def khan_tarjan(g, command):
     if command == "khan":
