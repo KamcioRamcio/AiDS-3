@@ -166,8 +166,8 @@ class Graph:
     # Algorytm Tarjana
     # Ale to jest dym brachu
     # https://www.youtube.com/watch?v=_1TDxihjtoE spoko wytłumaczone
-    #
-    def Trajan_Algorithm(self):
+    # Rekurencyjny
+    def Tarjan_Algorithm(self):
         # Po ludzku wytłumacze bazowo kazdy wierzchołek ma index -1 
         index = {n: -1 for n in self.adj_list}
         # Jest to wartość, która będzie reprezentować najniższy numer porządkowy w komponencie strong connect dla danego wierzchołka.
@@ -209,6 +209,55 @@ class Graph:
             if index[node] == -1:
                 strong_connect(node)
         return order
+    
+    #Iteracyjny Tarjan ale nie mój tylko wzorowany na tym co napisałem wyżej
+    def Tarjan_Algorithm_2(self):
+        index = {n: -1 for n in self.adj_list}
+        low_link = {n: -1 for n in self.adj_list}
+        on_stack = {n: False for n in self.adj_list}
+
+        stack = []
+        order = []
+        index_counter = [0]
+
+        def strong_connect(node):
+            nodes_stack = [(node, iter(self.adj_list[node]))]
+            while nodes_stack:
+                node, children = nodes_stack[-1]
+                if index[node] == -1:
+                    index[node] = index_counter[0]
+                    low_link[node] = index_counter[0]
+                    index_counter[0] += 1
+                    stack.append(node)
+                    on_stack[node] = True
+
+                try:
+                    child = next(children)
+                    if index[child] == -1:
+                        nodes_stack.append((child, iter(self.adj_list[child])))
+                    elif on_stack[child]:
+                        low_link[node] = min(low_link[node], index[child])
+                except StopIteration:
+                    nodes_stack.pop()
+                    if nodes_stack:
+                        parent, _ = nodes_stack[-1]
+                        low_link[parent] = min(low_link[parent], low_link[node])
+
+                    if low_link[node] == index[node]:
+                        component = []
+                        while True:
+                            neighbour = stack.pop()
+                            on_stack[neighbour] = False
+                            component.append(neighbour)
+                            if neighbour == node:
+                                break
+                        order.extend(component)
+
+        for node in self.adj_list:
+            if index[node] == -1:
+                strong_connect(node)
+        return order
+    
       
     def to_latex(self, filename):
         with open(filename, 'w') as f:
