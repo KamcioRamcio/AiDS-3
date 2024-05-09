@@ -4,10 +4,26 @@ import argparse
 #EOF
 parser = argparse.ArgumentParser()
 parser.add_argument('--user-provided', action='store_true')
+parser.add_argument('--generate', action='store_true')
 args = parser.parse_args()
 
 def main():
     g = None
+    if args.user_provided:
+        nodes = get_nodes()
+        g = graph.Graph(nodes)
+        for i in range(1, nodes+1):
+            edges = get_edges(i, nodes)
+            for edge in edges:
+                g.add_edge(i, edge)
+        print("Graph provided, ready for operations, to see graph type print")
+    if args.generate:
+        nodes = get_nodes()
+        saturation = get_saturation()
+        g = graph.Graph(nodes)
+        g.generate(saturation)
+        print("Graph generated, ready for operations, to see graph type print")
+    
     while True:
         command = get_command()
         if command == 'help':
@@ -20,13 +36,7 @@ def main():
             print()
             g = graph.Graph(nodes)
             g.generate(saturation)
-            print()
-            g.table()
-            print()
-            g.matrix()
-            print()
-            print(g.adj_list)
-            #print('end of generate')
+            print("Graph generated, ready for operations, to see graph type print")
         elif command == 'user-provided':
             nodes = get_nodes()
             g = graph.Graph(nodes)
@@ -34,7 +44,7 @@ def main():
                 edges = get_edges(i, nodes)
                 for edge in edges:
                     g.add_edge(i, edge)
-            g.table()
+            print("Graph provided, ready for operations, to see graph type print")
         elif command == 'print':
             type = get_type()
             print_graph(g, type)
@@ -43,9 +53,7 @@ def main():
             print(g.find(start, end))
         elif command == 'find path':
             start, end = get_start_end()
-            #print(g.find_path(start, end))
-            print('end of find path')
-            benchmark_find_path(g, start, end)
+            print(g.find_path(start, end))            
         elif command == 'cycle':
             if g.is_cyclic() == True:
                 print("Graph has a cycle")
@@ -91,7 +99,14 @@ def get_saturation():
 
 def get_edges(node, total_nodes):
     while True:
-        edges = list(map(int, input(f"    {node}> ").split()))
+        edge_input = input(f"    {node}> ")
+        if edge_input == "":
+            continue
+        try:
+            edges = list(map(int, edge_input.split()))
+        except ValueError:
+            print("Invalid input. Please enter integers only.")
+            continue
         if node in edges:
             print("Self-cycles are not allowed. Please enter the edges again.")
         elif 0 in edges:
@@ -113,9 +128,10 @@ def print_graph(g, type):
     if type == 'matrix':
         g.matrix()
     elif type == 'list':
-       print(g.adj_list)
+       g.list()
     else:
-        g.table()
+        print("Unknown type. Please try again.")
+        print_graph(g, get_type())
 
 
 def dfs_bfs(g, command):
@@ -137,49 +153,14 @@ def khan_tarjan(g, command):
         if g.Khan_Algorithm() == None:
             print("Graph has a cycle")
         else:  
-            print('inline:  ','  '.join(map(str, g.Khan_Algorithm())))
-            #benchmark_khan_algorithm(g)
-            print('end of khan')
+            print(g.Khan_Algorithm())
+            
     else:
         print(g.Tarjan_Algorithm())
         print()
         print(g.Tarjan_Algorithm_2())
         print()
         print(g.Tarjan())
-        #benchmark_tarjan_algorithm(g)
-        print('end of tarjan')
-
-
-
-
-#benchmark
-import time
-import sys
-import numpy as np
-sys.setrecursionlimit(10**9)
-
-def benchmark_find_path(g, start, end):
-    start_time = time.time()
-    g.find_path(start, end)
-    end_time = time.time()
-    print(f"Time taken to find edges: {end_time - start_time} seconds")
-
-def benchmark_khan_algorithm(g):
-    start_time = time.time()
-    g.Khan_Algorithm()
-    end_time = time.time()
-    print(f"Time taken for Khan's algorithm: {end_time - start_time} seconds")
-
-def benchmark_tarjan_algorithm(g):
-    start_time = time.time()
-    g.Tarjan_Algorithm_2()
-    end_time = time.time()
-    print(f"Time taken for Tarjan's algorithm: {end_time - start_time} seconds")
-
-
-
-
-
 
 
 

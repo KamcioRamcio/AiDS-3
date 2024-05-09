@@ -36,7 +36,7 @@ class Graph:
         for u, v in edges_list:
             self.add_edge(u, v)
             
-    def table(self):
+    def list(self):
         for node, edges in self.adj_list.items():
             print(f"{node}: {edges}")   
     
@@ -130,9 +130,7 @@ class Graph:
     #def degree(self, node):
     #    return sum(1 for edges in self.adj_list.values() if node in edges)
     
-    
-        
-    
+
     def Khan_Algorithm(self):
         # w naszym przypadku nie ma znaczenia czy to indegree czy outdegree bo jest to graf skierowany na 100%
         in_degree ={n: 0 for n in self.adj_list}
@@ -177,8 +175,6 @@ class Graph:
 
         stack = []
         order = []
-        
-        # jak nie dałem tego w liste to nie działało 
         index_counter = [0]
         
         def strong_connect(node):
@@ -258,7 +254,7 @@ class Graph:
                 strong_connect(node)
         return order
     
-
+    # Z pseudo kodu z pdfa
     def Tarjan(self):
         
         mark = {n: 'unmarked' for n in self.adj_list}
