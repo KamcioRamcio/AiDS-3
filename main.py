@@ -20,13 +20,13 @@ def main():
             print()
             g = graph.Graph(nodes)
             g.generate(saturation)
-            #print()
-            #g.table()
-            #print()
-            #g.matrix()
-            #print()
-            #print(g.adj_list)
-            print('end of generate')
+            print()
+            g.table()
+            print()
+            g.matrix()
+            print()
+            print(g.adj_list)
+            #print('end of generate')
         elif command == 'user-provided':
             nodes = get_nodes()
             g = graph.Graph(nodes)
@@ -137,12 +137,16 @@ def khan_tarjan(g, command):
         if g.Khan_Algorithm() == None:
             print("Graph has a cycle")
         else:  
-            #print('inline:  ','  '.join(map(str, g.Khan_Algorithm())))
-            benchmark_khan_algorithm(g)
+            print('inline:  ','  '.join(map(str, g.Khan_Algorithm())))
+            #benchmark_khan_algorithm(g)
             print('end of khan')
     else:
-        #print('inline:  ','  '.join(map(str, g.Tarjan_Algorithm())))
-        benchmark_tarjan_algorithm(g)
+        print(g.Tarjan_Algorithm())
+        print()
+        print(g.Tarjan_Algorithm_2())
+        print()
+        print(g.Tarjan())
+        #benchmark_tarjan_algorithm(g)
         print('end of tarjan')
 
 

@@ -258,6 +258,34 @@ class Graph:
                 strong_connect(node)
         return order
     
+
+    def Tarjan(self):
+        
+        mark = {n: 'unmarked' for n in self.adj_list}
+
+        
+        L = []
+
+        def visit(node):
+            if mark[node] == 'permanent':
+                return
+            if mark[node] == 'temporary':
+                raise Exception("Graph has at least one cycle")
+            
+            mark[node] = 'temporary'
+            for neighbour in self.adj_list[node]:
+                visit(neighbour)
+            
+            mark[node] = 'permanent'
+            L.append(node)
+
+        
+        for node in self.adj_list:
+            if mark[node] == 'unmarked':
+                visit(node)
+
+        return L
+    
       
     def to_latex(self, filename):
         with open(filename, 'w') as f:
