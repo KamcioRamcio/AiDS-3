@@ -39,6 +39,13 @@ class Graph:
     def table(self):
         for node, edges in self.adj_list.items():
             print(f"{node}: {edges}")   
+            
+    
+    def list(self):
+        for node, edges in self.adj_list.items():
+            for edge in edges:
+                print(f"{node} -> {edge}")
+            
     
     def matrix(self):
     
@@ -50,7 +57,7 @@ class Graph:
         print("--+" + "---"*self.nodes) 
         for i, row in enumerate(matrix, start=1):
             print(f"{i} | {'  '.join(str(cell) for cell in row)}")
-    # lista to wystarczy dac print("Adjacency list:", g.adj_list) to bardziej taki słownik ale no niech będzie 
+    
     
     # ty ja nie rozumiem troche tego 3 zadania podkunt 3, wyszkuwanie krawedzi grafu 
     def find(self, start, end):
@@ -203,7 +210,7 @@ class Graph:
         for node in self.adj_list:
             if index[node] == -1:
                 strong_connect(node)
-        return order
+        return order[::-1]
     
     #Iteracyjny Tarjan ale nie mój tylko wzorowany na tym co napisałem wyżej
     def Tarjan_Algorithm_2(self):
@@ -251,7 +258,9 @@ class Graph:
         for node in self.adj_list:
             if index[node] == -1:
                 strong_connect(node)
-        return order
+        return order[::-1]
+    
+    
     
     # Z pseudo kodu z pdfa
     def Tarjan(self):
@@ -279,7 +288,7 @@ class Graph:
             if mark[node] == 'unmarked':
                 visit(node)
 
-        return L
+        return L[::-1]
     
       
     def to_latex(self, filename):

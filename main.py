@@ -18,11 +18,12 @@ def main():
                 g.add_edge(i, edge)
         print("Graph provided, ready for operations, to see graph type print")
     if args.generate:
+        type= get_type()
         nodes = get_nodes()
         saturation = get_saturation()
         g = graph.Graph(nodes)
         g.generate(saturation)
-        print("Graph generated, ready for operations, to see graph type print")
+        print_graph(g,type)
     
     while True:
         command = get_command()
@@ -31,12 +32,13 @@ def main():
         elif command == 'exit':
             break
         elif command == 'generate':
+            type= get_type()
             nodes = get_nodes()
             saturation = get_saturation()
             print()
             g = graph.Graph(nodes)
             g.generate(saturation)
-            print("Graph generated, ready for operations, to see graph type print")
+            print_graph(g,type)
         elif command == 'user-provided':
             nodes = get_nodes()
             g = graph.Graph(nodes)
@@ -47,6 +49,7 @@ def main():
             print("Graph provided, ready for operations, to see graph type print")
         elif command == 'print':
             type = get_type()
+            print()
             print_graph(g, type)
         elif command == 'find':
             start, end = get_start_end()
@@ -92,7 +95,16 @@ def get_command():
     return input('command> ').lower()
 
 def get_nodes():
-    return int(input('nodes> '))
+    while True:
+        nodes_input = input('nodes> ')
+        if nodes_input.isdigit():
+            nodes = int(nodes_input)
+            if nodes < 1:
+                print("Invalid input. Please enter a positive integer.")
+            else:
+                return nodes
+        else:
+            print("Invalid input. Please enter a positive integer.")
 
 def get_saturation():
     return float(input('saturation> '))
@@ -128,11 +140,10 @@ def get_type():
 def print_graph(g, type):
     if type == 'matrix':
         g.matrix()
-    elif type == 'table':
-       g.table()
-       
     elif type == 'list':
-        print(g.adj_list)  
+        g.list()
+    elif type == 'table':
+        g.table()  
     else:
         print("Unknown type. Please try again.")
         print_graph(g, get_type())
