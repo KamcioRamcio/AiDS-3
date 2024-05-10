@@ -36,7 +36,7 @@ class Graph:
         for u, v in edges_list:
             self.add_edge(u, v)
             
-    def list(self):
+    def table(self):
         for node, edges in self.adj_list.items():
             print(f"{node}: {edges}")   
     
@@ -127,8 +127,7 @@ class Graph:
         return False
         # Algorytm Khana
     # Wazne: degree sie liczy, bo powino byc tak ze zaczynasz od node który ma degree 0 i idziej rosnaco
-    #def degree(self, node):
-    #    return sum(1 for edges in self.adj_list.values() if node in edges)
+    # To taki maksymalny podgraf, w którym istnieje ścieżka (skierowana) pomiędzy każdymi dwoma wierzchołkami tego podgrafu
     
 
     def Khan_Algorithm(self):

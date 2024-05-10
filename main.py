@@ -1,7 +1,7 @@
 import graph
 import argparse
 
-#EOF
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--user-provided', action='store_true')
 parser.add_argument('--generate', action='store_true')
@@ -66,6 +66,7 @@ def main():
             khan_tarjan(g, command)
         elif command == 'draw':
             g.to_latex('graph.tex')
+            print("Graph drawn in LaTeX")
         else:
             print("Unknown command. Please try again. Type help for more information.")
 
@@ -127,8 +128,11 @@ def get_type():
 def print_graph(g, type):
     if type == 'matrix':
         g.matrix()
+    elif type == 'table':
+       g.table()
+       
     elif type == 'list':
-       g.list()
+        print(g.adj_list)  
     else:
         print("Unknown type. Please try again.")
         print_graph(g, get_type())
