@@ -1,6 +1,6 @@
 import random
 import numpy as np
-class Grpah:
+class Graph:
     def __init__(self):
         self.matrix = []
         self.list = []
@@ -154,88 +154,112 @@ class Grpah:
                 print(f"Edge {start} -> {end} does not exists.")
         else:
             print("Graph is empty.")
-    def bfs(self,start):
+    def bfs(self):
         if self.matrix:
-            visited = [False]*(len(self.matrix)+1)
-            queue = []
-            queue.append(start)
-            visited[start] = True
-            while queue:
-                start = queue.pop(0)
-                print(start, end = " ")
-                for i in range(1,len(self.matrix)+1):
-                    if self.matrix[start-1][i-1] == 1 and not visited[i]: 
-                        queue.append(i)
-                        visited[i] = True
+            for start in range(1, len(self.matrix) + 1):
+                visited = [False]*(len(self.matrix)+1)
+                order = []
+                queue = [start]
+                visited[start] = True
+                while queue:
+                    node = queue.pop(0)
+                    order.append(node)
+                    for i in range(1, len(self.matrix)+1):
+                        if self.matrix[node-1][i-1] == 1 and not visited[i]: 
+                            queue.append(i)
+                            visited[i] = True
+                if all(visited[1:]):
+                    return order
         elif self.list:
             num_nodes = max(max(edge) for edge in self.list)
-            visited = [False]*(num_nodes+1)
-            queue = []
-            queue.append(start)
-            visited[start] = True
-            while queue:
-                start = queue.pop(0)
-                print(start, end = " ")
-                for i in self.list:
-                    if i[0] == start and not visited[i[1]]:
-                        queue.append(i[1])
-                        visited[i[1]] = True
+            for start in range(1, num_nodes + 1):
+                visited = [False]*(num_nodes+1)
+                order = []
+                queue = [start]
+                visited[start] = True
+                while queue:
+                    node = queue.pop(0)
+                    order.append(node)
+                    for edge in self.list:
+                        if edge[0] == node and not visited[edge[1]]:
+                            queue.append(edge[1])
+                            visited[edge[1]] = True
+                if all(visited[1:]):
+                    return order
         elif self.table:
-            visited = [False]*(len(self.table)+1)
-            queue = []
-            queue.append(start)
-            visited[start] = True
-            while queue:
-                start = queue.pop(0)
-                print(start, end = " ")
-                for i in self.table[start-1]:
-                    if not visited[i]:
-                        queue.append(i)
-                        visited[i] = True
+            for start in range(1, len(self.table) + 1):
+                visited = [False]*(len(self.table)+1)
+                order = []
+                queue = [start]
+                visited[start] = True
+                while queue:
+                    node = queue.pop(0)
+                    order.append(node)
+                    for i in self.table[node-1]:
+                        if not visited[i]:
+                            queue.append(i)
+                            visited[i] = True
+                if all(visited[1:]):
+                    return order
         else:
             print("Graph is empty.")
+            return None
+        print("No valid start node found.")
+        return None
     
-    def dfs(self,start):
+    def dfs(self):
         if self.matrix:
-            visited = [False]*(len(self.matrix)+1)
-            stack = []
-            stack.append(start)
-            visited[start] = True
-            while stack:
-                start = stack.pop()
-                print(start, end = " ")
-                for i in range(1,len(self.matrix)+1):
-                    if self.matrix[start-1][i-1] == 1 and not visited[i]: 
-                        stack.append(i)
-                        visited[i] = True
+            for start in range(1, len(self.matrix) + 1):
+                visited = [False]*(len(self.matrix)+1)
+                order = []
+                stack = [start]
+                visited[start] = True
+                while stack:
+                    node = stack.pop()
+                    order.append(node)
+                    for i in range(1, len(self.matrix)+1):
+                        if self.matrix[node-1][i-1] == 1 and not visited[i]: 
+                            stack.append(i)
+                            visited[i] = True
+                if all(visited[1:]):
+                    return order
         elif self.list:
-            num_nodes = max(max(edge) for edge in self.list) 
-            visited = [False]*(num_nodes+1) 
-            stack = []
-            stack.append(start)
-            visited[start] = True
-            while stack:
-                start = stack.pop()
-                print(start, end = " ")
-                for i in self.list:
-                    if i[0] == start and not visited[i[1]]:
-                        stack.append(i[1])
-                        visited[i[1]] = True
+            num_nodes = max(max(edge) for edge in self.list)
+            for start in range(1, num_nodes + 1):
+                visited = [False]*(num_nodes+1)
+                order = []
+                stack = [start]
+                visited[start] = True
+                while stack:
+                    node = stack.pop()
+                    order.append(node)
+                    for edge in self.list:
+                        if edge[0] == node and not visited[edge[1]]:
+                            stack.append(edge[1])
+                            visited[edge[1]] = True
+                if all(visited[1:]):
+                    return order
         elif self.table:
-            visited = [False]*(len(self.table)+1)
-            stack = []
-            stack.append(start)
-            visited[start] = True
-            while stack:
-                start = stack.pop()
-                print(start, end = " ")
-                for i in self.table[start-1]:
-                    if not visited[i]:
-                        stack.append(i)
-                        visited[i] = True
+            for start in range(1, len(self.table) + 1):
+                visited = [False]*(len(self.table)+1)
+                order = []
+                stack = [start]
+                visited[start] = True
+                while stack:
+                    node = stack.pop()
+                    order.append(node)
+                    for i in self.table[node-1]:
+                        if not visited[i]:
+                            stack.append(i)
+                            visited[i] = True
+                if all(visited[1:]):
+                    return order
         else:
-            print("Graph is empty.")             
-    
+            print("Graph is empty.")
+            return None
+        print("No valid start node found.")
+        return None           
+        
     def khan(self):
         if self.matrix:
             in_degree = [0]*(len(self.matrix))
@@ -378,20 +402,83 @@ class Grpah:
         else:
             print("Graph is empty.")
     
+    def to_tikz(self):
+        if self.matrix:
+            self.tikz_matrix("matrix-graph.tex")
+        elif self.list:
+            self.tikz_list("list-graph.tex")
+        elif self.table:
+            self.tikz_table("table-graph.tex")
+        else:
+            print("Graph is empty.")
     
-           
+    def tikz_matrix(self, file):
+        with open(file, 'w') as f:
+            f.write("\\documentclass{article}\n")
+            f.write("\\usepackage{tikz}\n")
+            f.write("\\begin{document}\n")
+            f.write("\\begin{figure}\n")
+            f.write("\\centering\n")
+            f.write("\\begin{tikzpicture}[auto, node distance=2cm, every loop/.style={},]\n")
             
-                     
-                    
+            num_nodes = len(self.matrix)
+
+            for node in range(num_nodes):
+                f.write(f"\\node[draw, circle] ({node+1}) at ({(node+1) * 360/num_nodes}:3cm) {{$ {node+1} $}};\n")
+                
+            for i in range(num_nodes):
+                for j in range(num_nodes):
+                    if self.matrix[i][j] == 1:
+                        f.write(f"\\path[->] ({i+1}) edge node {{}} ({j+1});\n")
             
-if __name__ == "__main__":
-    g = Grpah()
-    g.user_provided(6,'list')
-    g.khan()
-    g.tarjan()
-    g.bfs(1)
-    print()
-    g.dfs(1)
+            f.write("\\end{tikzpicture}\n")
+            f.write("\\end{figure}\n")
+            f.write("\\end{document}\n")
+        print(f"Graph exported to {file}")
+    
+    def tikz_list(self, file):
+        with open(file, 'w') as f:
+            f.write("\\documentclass{article}\n")
+            f.write("\\usepackage{tikz}\n")
+            f.write("\\begin{document}\n")
+            f.write("\\begin{figure}\n")
+            f.write("\\centering\n")
+            f.write("\\begin{tikzpicture}[auto, node distance=2cm, every loop/.style={},]\n")
+            
+            num_nodes = max(max(edge) for edge in self.list)  
+            
+            for node in range(num_nodes):
+                f.write(f"\\node[draw, circle] ({node+1}) at ({(node+1) * 360/num_nodes}:3cm) {{$ {node+1} $}};\n")
+                
+            for edge in self.list:
+                f.write(f"\\path[->] ({edge[0]}) edge node {{}} ({edge[1]});\n")
+            
+            f.write("\\end{tikzpicture}\n")
+            f.write("\\end{figure}\n")
+            f.write("\\end{document}\n")
+        print(f"Graph exported to {file}")
+        
+    def tikz_table(self,file):
+        with open(file, 'w') as f:
+            f.write("\\documentclass{article}\n")
+            f.write("\\usepackage{tikz}\n")
+            f.write("\\begin{document}\n")
+            f.write("\\begin{figure}\n")
+            f.write("\\centering\n")
+            f.write("\\begin{tikzpicture}[auto, node distance=2cm, every loop/.style={},]\n")
+            
+            num_nodes = len(self.table)
+            for node in range(num_nodes):
+                f.write(f"\\node[draw, circle] ({node+1}) at ({(node+1) * 360/num_nodes}:3cm) {{$ {node+1} $}};\n")
+            for i in range(num_nodes):
+                for j in self.table[i]:
+                    f.write(f"\\path[->] ({i+1}) edge node {{}} ({j});\n")
+            f.write("\\end{tikzpicture}\n")
+            f.write("\\end{figure}\n")
+            f.write("\\end{document}\n")
+        print(f"Graph exported to {file}")
+    
+    
 
     
     
