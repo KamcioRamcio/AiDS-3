@@ -8,9 +8,9 @@ parser.add_argument('--generate', action='store_true')
 args = parser.parse_args()
 
 def main():
-    g = None
+    g = graph.Graph()
     if args.user_provided:
-        g = graph.Graph()
+        
         type = get_type()
         nodes = get_nodes()
         try:
@@ -29,7 +29,7 @@ def main():
             g.print(type)
         except:
             print("Invalid input")
-    g = graph.Graph()
+    
     while True:
         
         command = get_command()
@@ -60,7 +60,7 @@ def main():
         elif command in ["bfs", "breadth first search"]:
             print(g.bfs())
         elif command == "print":
-            g.print()
+            g.print(type)
         elif command in ["dfs", "depth first search"]:
             print(g.dfs())
         elif command == "khan":
@@ -121,3 +121,6 @@ def get_start_end():
 
 if __name__ == "__main__":
     main()
+    
+    
+    

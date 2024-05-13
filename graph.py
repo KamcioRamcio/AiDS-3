@@ -125,8 +125,6 @@ class Graph:
     def print_list(self):
         for i, j in self.list:
             print(f"{i} -> {j}")
-        #if self.list[-1][0] == i:  
-        #    print(f"{i+1} -> ")
         
         
     def print_table(self):
@@ -287,8 +285,8 @@ class Graph:
             else:
                 print("Khan: ", [node + 1 for node in top_order])
         elif self.list:
-            num_nodes = max(max(edge) for edge in self.list)  # find the maximum value in self.list
-            in_degree = [0] * num_nodes  # initialize in_degree with the number of nodes
+            num_nodes = max(max(edge) for edge in self.list) 
+            in_degree = [0] * num_nodes
             for i in range(len(self.list)):
                 in_degree[self.list[i][1]-1] += 1
             queue = []
@@ -367,8 +365,8 @@ class Graph:
             if mark[node] == 'unmarked':
                 mark[node] = 'temp'
                 for i in self.list:
-                    if i[0] == node + 1:  # add 1 to node
-                        visit(i[1]-1)  # subtract 1 from i[1]
+                    if i[0] == node + 1: 
+                        visit(i[1]-1)
                 mark[node] = 'marked'
                 order.insert(0,node)
         for i in range(num_nodes):
@@ -477,8 +475,5 @@ class Graph:
             f.write("\\end{figure}\n")
             f.write("\\end{document}\n")
         print(f"Graph exported to {file}")
-    
-    
-
     
     
